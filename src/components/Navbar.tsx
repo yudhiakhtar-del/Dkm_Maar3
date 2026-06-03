@@ -56,7 +56,7 @@ export default function Navbar({
             className="flex items-center space-x-3 cursor-pointer group"
           >
             {/* Official High-Fidelity DKM MAAR3 Logo Emblem */}
-            <Logo size={46} className="group-hover:scale-105 duration-300 transition-transform filter drop-shadow-sm shrink-0" />
+            <Logo size={58} className="group-hover:scale-105 duration-300 transition-transform filter drop-shadow-sm shrink-0" />
             <div>
               <div className="flex items-center">
                 <span className="font-serif font-bold text-lg md:text-xl text-white tracking-wide">

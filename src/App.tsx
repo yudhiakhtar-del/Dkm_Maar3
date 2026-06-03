@@ -10,12 +10,15 @@ import ArtikelComponent from './components/Artikel';
 import DonasiComponent from './components/Donasi';
 import AdminDashboard from './components/AdminDashboard';
 import Footer from './components/Footer';
+import VideoProfil from './components/VideoProfil';
 // @ts-ignore
 import fiqihSunnahFlyer from './assets/images/fiqih_sunnah_flyer_1780238395487.png';
 // @ts-ignore
 import sirahNabawiyahFlyer from './assets/images/sirah_nabawiyah_flyer_1780239260088.png';
 // @ts-ignore
 import bankSampahOrchidFlyer from './assets/images/bank_sampah_orchid_flyer_1780239512122.png';
+// @ts-ignore
+import ustadzIdrusAbidin from './assets/images/ustadz_idrus_abidin_1780270163083.png';
 
 // Types
 import { Artikel, Kegiatan, Kajian, Galeri, DonasiCampaign, Pengurus, Donor } from './types';
@@ -65,6 +68,9 @@ export default function App() {
         if (item.id === 'kajian-2') {
           return { ...item, image: sirahNabawiyahFlyer };
         }
+        if (item.id === 'kajian-3') {
+          return { ...item, image: ustadzIdrusAbidin };
+        }
         return item;
       });
     }
@@ -93,11 +99,30 @@ export default function App() {
   const [pengurusList, setPengurusList] = useState<Pengurus[]>(() => {
     const cached = localStorage.getItem('maar3_pengurus');
     if (cached) {
-      const parsed = JSON.parse(cached);
-      if (parsed.length < INITIAL_PENGURUS.length) {
+      try {
+        let parsed = JSON.parse(cached);
+        // Filter out deleted roles
+        parsed = parsed.filter(
+          (p: any) => p.id !== 'peng-1' && p.role !== 'Ketua Umum DKM MAAR3' && p.role !== 'Ketua Umum DKMMAAR3'
+        );
+        
+        // Find if Ustadz Idrus Abidin is already in parsed
+        const idrusIndex = parsed.findIndex((p: any) => p.name.includes("Idrus Abidin") || p.id === 'peng-idrus');
+        if (idrusIndex === -1) {
+          // If Ustadz Idrus Abidin is missing, we prepend/add him from INITIAL_PENGURUS
+          const idrusInitial = INITIAL_PENGURUS.find(p => p.id === 'peng-idrus');
+          if (idrusInitial) {
+            parsed.unshift(idrusInitial);
+          }
+        } else {
+          // If he exists, ensure his image is ALWAYS the latest image
+          parsed[idrusIndex].image = ustadzIdrusAbidin;
+        }
+        
+        return parsed;
+      } catch (e) {
         return INITIAL_PENGURUS;
       }
-      return parsed;
     }
     return INITIAL_PENGURUS;
   });
@@ -135,6 +160,14 @@ export default function App() {
   });
 
   // Keep state hydrated inside localStorage of Client Sandbox
+  const [profileVideoUrl, setProfileVideoUrl] = useState<string>(() => {
+    return localStorage.getItem('maar3_profile_video') || 'https://www.youtube.com/watch?v=eW6l4uVnEAs';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('maar3_profile_video', profileVideoUrl);
+  }, [profileVideoUrl]);
+
   useEffect(() => {
     localStorage.setItem('maar3_artikel', JSON.stringify(artikelList));
   }, [artikelList]);
@@ -284,6 +317,13 @@ export default function App() {
 
               </div>
             </div>
+
+            {/* Video Profil Masjid */}
+            <VideoProfil 
+              videoUrl={profileVideoUrl} 
+              onUpdateVideoUrl={setProfileVideoUrl} 
+              isAdmin={true}
+            />
 
             {/* Quick interactive schedules Widget on home */}
             <JadwalSholat />

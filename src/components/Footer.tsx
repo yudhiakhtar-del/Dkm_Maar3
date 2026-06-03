@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, Mail, Phone, Clock, Landmark, MessageSquare, Heart, MapPin } from 'lucide-react';
+import { Compass, Mail, Phone, Clock, Landmark, MessageSquare, Heart, MapPin, Facebook, Instagram, Youtube, Music } from 'lucide-react';
 import Logo from './Logo';
 
 interface FooterProps {
@@ -10,7 +10,7 @@ interface FooterProps {
 export default function Footer({ onTabChange, onAdminClick }: FooterProps) {
   const handleWAOpen = () => {
     const text = 'Bismillah, saya ingin bersilaturahim dengan Pengurus DKM Masjid MAAR 3 Orchid Green Park Sawangan.';
-    const url = `https://api.whatsapp.com/send?phone=628123456789&text=${encodeURIComponent(text)}`;
+    const url = `https://api.whatsapp.com/send?phone=6288297793000&text=${encodeURIComponent(text)}`;
     window.open(url, '_blank', 'noreferrer,noopener');
   };
 
@@ -28,7 +28,7 @@ export default function Footer({ onTabChange, onAdminClick }: FooterProps) {
           {/* Identity & Address Block */}
           <div className="md:col-span-4 space-y-4">
             <div className="flex items-center space-x-2.5">
-              <Logo size={46} className="filter drop-shadow-md shrink-0 duration-300 hover:rotate-6 transition-transform" />
+              <Logo size={58} className="filter drop-shadow-md shrink-0 duration-300 hover:rotate-6 transition-transform" />
               <div>
                 <h4 className="font-serif font-bold text-lg md:text-xl text-white tracking-wide leading-tight">
                   MASJID MAAR 3
@@ -94,10 +94,10 @@ export default function Footer({ onTabChange, onAdminClick }: FooterProps) {
                 <span>Hubungi via WhatsApp</span>
               </button>
               
-              <div className="space-y-2 text-xs text-emerald-100/75 pl-1.5">
+              <div className="space-y-2 text-xs text-emerald-100/75 pl-1.5 font-sans">
                 <div className="flex items-center space-x-2">
                   <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span className="font-mono">+62-8123-456-789</span>
+                  <span className="font-mono">0882-9779-3000</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Mail className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -108,6 +108,52 @@ export default function Footer({ onTabChange, onAdminClick }: FooterProps) {
                   <span>Sekretariat Buka: 08:00 - 17:00</span>
                 </div>
               </div>
+
+              {/* Social Media Circular Buttons */}
+              <div className="pt-4 border-t border-emerald-900/50 space-y-2.5">
+                <p className="text-[10px] text-emerald-300 uppercase tracking-widest font-extrabold font-sans">
+                  Ikuti Media Sosial DKM
+                </p>
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <a
+                    href="https://www.facebook.com/masjidogp"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-full bg-emerald-900/60 hover:bg-[#1877F2] hover:text-white text-blue-400 flex items-center justify-center transition-all duration-300 shadow shadow-emerald-950/20 hover:scale-110 cursor-pointer border border-emerald-800/30"
+                    title="Facebook Masjid Muniroh Ar-Rukban 3"
+                  >
+                    <Facebook className="w-4 h-4 fill-current stroke-0 text-[#1877F2] hover:text-white" />
+                  </a>
+                  <a
+                    href="https://www.instagram.com/masjid_ogp"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-full bg-emerald-900/60 hover:bg-gradient-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:text-white text-[#E1306C] flex items-center justify-center transition-all duration-300 shadow shadow-emerald-950/20 hover:scale-110 cursor-pointer border border-emerald-800/30 group"
+                    title="Instagram @masjid_ogp"
+                  >
+                    <Instagram className="w-4 h-4 text-[#E1306C] group-hover:text-white transition-colors duration-300" />
+                  </a>
+                  <a
+                    href="https://www.tiktok.com/@masjid.ogp"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-full bg-emerald-900/60 hover:bg-black text-[#00f2fe] flex items-center justify-center transition-all duration-300 shadow shadow-emerald-950/20 hover:scale-110 cursor-pointer border border-emerald-800/30 group"
+                    title="TikTok @masjid.ogp"
+                  >
+                    <Music className="w-4 h-4 text-[#00f2fe] group-hover:text-white transition-colors duration-300 drop-shadow-[1px_1px_rgba(254,9,121,0.8)]" />
+                  </a>
+                  <a
+                    href="https://youtube.com/@masjidogp1617"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-full bg-emerald-900/60 hover:bg-[#FF0000] hover:text-white text-[#FF0000] flex items-center justify-center transition-all duration-300 shadow shadow-emerald-950/20 hover:scale-110 cursor-pointer border border-emerald-800/30 group"
+                    title="YouTube @masjidogp1617"
+                  >
+                    <Youtube className="w-4 h-4 fill-current stroke-0 text-[#FF0000] group-hover:text-white transition-colors duration-300" />
+                  </a>
+                </div>
+              </div>
+
             </div>
           </div>
 

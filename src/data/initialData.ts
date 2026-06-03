@@ -5,6 +5,8 @@ import fiqihSunnahFlyer from '../assets/images/fiqih_sunnah_flyer_1780238395487.
 import sirahNabawiyahFlyer from '../assets/images/sirah_nabawiyah_flyer_1780239260088.png';
 // @ts-ignore
 import bankSampahOrchidFlyer from '../assets/images/bank_sampah_orchid_flyer_1780239512122.png';
+// @ts-ignore
+import ustadzIdrusAbidin from '../assets/images/ustadz_idrus_abidin_1780270163083.png';
 
 // Unsplash premium Islamic & related aesthetics images
 export const IMAGES = {
@@ -48,7 +50,7 @@ export const INITIAL_KAJIAN: Kajian[] = [
     time: 'Ba’da Subuh s/d Selesai',
     location: 'Masjid MAAR 3',
     day: 'Pekan Ke-3',
-    image: 'https://images.unsplash.com/photo-1584697964400-2af6a2f6204c?auto=format&fit=crop&q=80&w=300'
+    image: ustadzIdrusAbidin
   },
   {
     id: 'kajian-4',
@@ -319,10 +321,10 @@ export const INITIAL_DONASI: DonasiCampaign[] = [
 
 export const INITIAL_PENGURUS: Pengurus[] = [
   {
-    id: 'peng-1',
-    name: 'Bapak H. Yudhi Akhtar',
-    role: 'Ketua Umum DKM MAAR3',
-    image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&q=80&w=300'
+    id: 'peng-idrus',
+    name: 'Ustadz Idrus Abidin Lc, MA',
+    role: 'Pembina Dakwah & Kajian Syariah',
+    image: ustadzIdrusAbidin
   },
   {
     id: 'peng-2',
