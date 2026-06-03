@@ -161,7 +161,11 @@ export default function App() {
 
   // Keep state hydrated inside localStorage of Client Sandbox
   const [profileVideoUrl, setProfileVideoUrl] = useState<string>(() => {
-    return localStorage.getItem('maar3_profile_video') || 'https://www.youtube.com/watch?v=eW6l4uVnEAs';
+    const cached = localStorage.getItem('maar3_profile_video');
+    if (!cached || cached === 'https://www.youtube.com/watch?v=eW6l4uVnEAs') {
+      return 'https://www.youtube.com/watch?v=6NLwziTHHy4&list=PLLrzrdSGtEBben3b7-LIzvaqjY60XFM8S';
+    }
+    return cached;
   });
 
   useEffect(() => {

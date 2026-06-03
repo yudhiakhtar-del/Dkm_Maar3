@@ -9,7 +9,7 @@ interface VideoProfilProps {
 }
 
 export default function VideoProfil({ 
-  videoUrl = 'https://www.youtube.com/watch?v=eW6l4uVnEAs', // Beautiful serene mosque drone video as elegant default
+  videoUrl = 'https://www.youtube.com/watch?v=6NLwziTHHy4&list=PLLrzrdSGtEBben3b7-LIzvaqjY60XFM8S', // Beautiful serene mosque drone video as elegant default
   onUpdateVideoUrl,
   isAdmin = false 
 }: VideoProfilProps) {
@@ -25,7 +25,7 @@ export default function VideoProfil({
     return (match && match[2].length === 11) ? match[2] : null;
   };
 
-  const videoId = getYouTubeId(videoUrl) || 'eW6l4uVnEAs';
+  const videoId = getYouTubeId(videoUrl) || '6NLwziTHHy4';
   const iframeSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
 
   const handleSaveUrl = () => {
