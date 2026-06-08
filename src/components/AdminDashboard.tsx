@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Lock, LogOut, Plus, Trash2, Edit3, Folder, HelpCircle, Check, AlertCircle, FileText, Calendar, Camera, BookOpen, Heart, Users, ShieldAlert } from 'lucide-react';
-import { Artikel, Kegiatan, Kajian, Galeri, DonasiCampaign, Pengurus } from '../types';
+import { Lock, LogOut, Plus, Trash2, Edit3, Folder, HelpCircle, Check, AlertCircle, FileText, Calendar, Camera, BookOpen, Heart, Users, ShieldAlert, Store } from 'lucide-react';
+import { Artikel, Kegiatan, Kajian, Galeri, DonasiCampaign, Pengurus, Umkm } from '../types';
 
 interface AdminDashboardProps {
   // Lists
@@ -11,6 +11,7 @@ interface AdminDashboardProps {
   galeriList: Galeri[];
   campaignList: DonasiCampaign[];
   pengurusList: Pengurus[];
+  umkmList: Umkm[];
 
   // Setters/CRUD callbacks
   setArtikelList: React.Dispatch<React.SetStateAction<Artikel[]>>;
@@ -19,6 +20,7 @@ interface AdminDashboardProps {
   setGaleriList: React.Dispatch<React.SetStateAction<Galeri[]>>;
   setCampaignList: React.Dispatch<React.SetStateAction<DonasiCampaign[]>>;
   setPengurusList: React.Dispatch<React.SetStateAction<Pengurus[]>>;
+  setUmkmList: React.Dispatch<React.SetStateAction<Umkm[]>>;
 
   // Close callback
   onClose: () => void;
@@ -31,12 +33,14 @@ export default function AdminDashboard({
   galeriList,
   campaignList,
   pengurusList,
+  umkmList,
   setArtikelList,
   setKegiatanList,
   setKajianList,
   setGaleriList,
   setCampaignList,
   setPengurusList,
+  setUmkmList,
   onClose,
 }: AdminDashboardProps) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -64,6 +68,7 @@ export default function AdminDashboard({
     location: '',
     status: 'Mendatang',
     image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=400',
+    youtubeUrl: '',
   });
 
   const [newKajian, setNewKajian] = useState<Partial<Kajian>>({
@@ -73,6 +78,7 @@ export default function AdminDashboard({
     location: 'Masjid MAAR 3',
     day: 'Pekan Ke-1',
     image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=300',
+    youtubeUrl: '',
   });
 
   const [newGaleri, setNewGaleri] = useState<Partial<Galeri>>({
@@ -96,6 +102,17 @@ export default function AdminDashboard({
     image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&q=80&w=600',
   });
 
+  const [newUmkm, setNewUmkm] = useState<Partial<Umkm>>({
+    name: '',
+    owner: '',
+    category: 'Kuliner',
+    description: '',
+    address: '',
+    whatsapp: '',
+    promo: '',
+    image: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=400',
+  });
+
   // Login handler
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,7 +126,7 @@ export default function AdminDashboard({
   };
 
   // CRUD Handlers
-  const deleteItem = (id: string, type: 'artikel' | 'kegiatan' | 'kajian' | 'galeri' | 'campaign' | 'pengurus') => {
+  const deleteItem = (id: string, type: 'artikel' | 'kegiatan' | 'kajian' | 'galeri' | 'campaign' | 'pengurus' | 'umkm') => {
     if (!window.confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
     
     if (type === 'artikel') {
@@ -124,6 +141,8 @@ export default function AdminDashboard({
       setCampaignList(campaignList.filter((x) => x.id !== id));
     } else if (type === 'pengurus') {
       setPengurusList(pengurusList.filter((x) => x.id !== id));
+    } else if (type === 'umkm') {
+      setUmkmList(umkmList.filter((x) => x.id !== id));
     }
   };
 
@@ -174,6 +193,7 @@ export default function AdminDashboard({
       location: newKegiatan.location,
       status: newKegiatan.status as Kegiatan['status'],
       image: newKegiatan.image || 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=400',
+      youtubeUrl: newKegiatan.youtubeUrl || '',
     };
     setKegiatanList([created, ...kegiatanList]);
     setNewKegiatan({
@@ -185,6 +205,7 @@ export default function AdminDashboard({
       location: '',
       status: 'Mendatang',
       image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=400',
+      youtubeUrl: '',
     });
     alert('Kegiatan Baru Ditambahkan!');
   };
@@ -203,6 +224,7 @@ export default function AdminDashboard({
       location: newKajian.location || 'Masjid MAAR 3',
       day: newKajian.day || 'Pekan Ke-1',
       image: newKajian.image || 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=300',
+      youtubeUrl: newKajian.youtubeUrl || '',
     };
     setKajianList([...kajianList, created]);
     setNewKajian({
@@ -212,6 +234,7 @@ export default function AdminDashboard({
       location: 'Masjid MAAR 3',
       day: 'Pekan Ke-1',
       image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=300',
+      youtubeUrl: '',
     });
     alert('Jadwal Khutbah/Kajian Ditambahkan!');
   };
@@ -285,6 +308,37 @@ export default function AdminDashboard({
       image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&q=80&w=600',
     });
     alert('Program Donasi Baru Diluncurkan!');
+  };
+
+  const handleAddUmkm = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newUmkm.name || !newUmkm.owner || !newUmkm.address || !newUmkm.whatsapp) {
+      alert('Mohon lengkapi nama usaha, nama pemilik, alamat OGP, dan nomor WhatsApp.');
+      return;
+    }
+    const created: Umkm = {
+      id: `umkm-${Date.now()}`,
+      name: newUmkm.name,
+      owner: newUmkm.owner,
+      category: newUmkm.category as Umkm['category'] || 'Kuliner',
+      description: newUmkm.description || '',
+      address: newUmkm.address,
+      whatsapp: newUmkm.whatsapp,
+      promo: newUmkm.promo || '',
+      image: newUmkm.image || 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=400',
+    };
+    setUmkmList([created, ...umkmList]);
+    setNewUmkm({
+      name: '',
+      owner: '',
+      category: 'Kuliner',
+      description: '',
+      address: '',
+      whatsapp: '',
+      promo: '',
+      image: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=400',
+    });
+    alert('UMKM Binaan Baru Berhasil Ditambahkan!');
   };
 
   const handleBypassLogin = () => {
@@ -381,6 +435,7 @@ export default function AdminDashboard({
                     { id: 'galeri', label: 'Galeri Foto', icon: Camera },
                     { id: 'donasi', label: 'Donasi Program', icon: Heart },
                     { id: 'pengurus', label: 'Pengurus DKM', icon: Users },
+                    { id: 'umkm', label: 'UMKM Warga OGP', icon: Store },
                   ].map((tab) => {
                     const Icon = tab.icon;
                     return (
@@ -430,7 +485,7 @@ export default function AdminDashboard({
                     Super Admin Console / {activeSubTab.toUpperCase()}
                   </span>
                   <h3 className="text-xl md:text-2xl font-serif font-black text-gray-950 dark:text-white mt-1">
-                    Kelola {activeSubTab === 'artikel' ? 'Artikel Islami' : activeSubTab === 'kajian' ? 'Jadwal Kajian Ustadz' : activeSubTab === 'galeri' ? 'Dokumentasi Galeri' : activeSubTab === 'donasi' ? 'Target Donasi & Infaq' : activeSubTab === 'kegiatan' ? 'Kegiatan & Sosial' : 'Struktur Pengurus DKM'}
+                    Kelola {activeSubTab === 'artikel' ? 'Artikel Islami' : activeSubTab === 'kajian' ? 'Jadwal Kajian Ustadz' : activeSubTab === 'galeri' ? 'Dokumentasi Galeri' : activeSubTab === 'donasi' ? 'Target Donasi & Infaq' : activeSubTab === 'kegiatan' ? 'Kegiatan & Sosial' : activeSubTab === 'umkm' ? 'Pemberdayaan UMKM Warga' : 'Struktur Pengurus DKM'}
                   </h3>
                 </div>
 
@@ -583,7 +638,7 @@ export default function AdminDashboard({
                         <input
                           type="text"
                           required
-                          placeholder="Contoh: Kerja Bakti OGP Sya'ban..."
+                          placeholder="Contoh: Rapat Sosialisasi Kopsyar OGP..."
                           value={newKegiatan.title}
                           onChange={(e) => setNewKegiatan({ ...newKegiatan, title: e.target.value })}
                           className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white"
@@ -605,7 +660,7 @@ export default function AdminDashboard({
                           <option value="KBMA">KBMA</option>
                           <option value="Ramadhan">Ramadhan</option>
                           <option value="Idul Adha">Idul Adha</option>
-                          <option value="Kerja Bakti">Kerja Bakti</option>
+                          <option value="Kopsyar OGP">Kopsyar OGP</option>
                         </select>
                       </div>
                     </div>
@@ -664,6 +719,17 @@ export default function AdminDashboard({
                         placeholder="Rincian pelaksanaan dkum dan info panitia..."
                         value={newKegiatan.description}
                         onChange={(e) => setNewKegiatan({ ...newKegiatan, description: e.target.value })}
+                        className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white font-sans"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-gray-400">Link Streaming / Dokumentasi YouTube (Opsional)</label>
+                      <input
+                        type="url"
+                        placeholder="Contoh: https://www.youtube.com/watch?v=..."
+                        value={newKegiatan.youtubeUrl || ''}
+                        onChange={(e) => setNewKegiatan({ ...newKegiatan, youtubeUrl: e.target.value })}
                         className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white font-sans"
                       />
                     </div>
@@ -786,6 +852,17 @@ export default function AdminDashboard({
                       </div>
                     </div>
 
+                    <div>
+                      <label className="text-xs text-gray-400">Link Video / Streaming YouTube (Opsional)</label>
+                      <input
+                        type="url"
+                        placeholder="Contoh: https://www.youtube.com/watch?v=..."
+                        value={newKajian.youtubeUrl || ''}
+                        onChange={(e) => setNewKajian({ ...newKajian, youtubeUrl: e.target.value })}
+                        className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white font-sans"
+                      />
+                    </div>
+
                     <button
                       type="submit"
                       className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold uppercase hover:bg-emerald-500"
@@ -866,7 +943,7 @@ export default function AdminDashboard({
                           <option value="KBMA">KBMA</option>
                           <option value="Ramadhan">Ramadhan</option>
                           <option value="Idul Adha">Idul Adha</option>
-                          <option value="Kerja Bakti">Kerja Bakti</option>
+                          <option value="Kopsyar OGP">Kopsyar OGP</option>
                         </select>
                       </div>
                     </div>
@@ -1101,6 +1178,166 @@ export default function AdminDashboard({
                                   id={`delete-btn-pengurus-${pg.id}`}
                                   onClick={() => deleteItem(pg.id, 'pengurus')}
                                   className="p-1.5 bg-rose-50 hover:bg-rose-150 text-rose-500 rounded-lg"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* SUBTAB UMKM */}
+              {activeSubTab === 'umkm' && (
+                <div className="space-y-6">
+                  {/* Create New Form */}
+                  <form onSubmit={handleAddUmkm} className="p-4 md:p-6 bg-slate-50 dark:bg-slate-950/40 rounded-2xl border border-gray-100 dark:border-slate-850 space-y-4">
+                    <h4 className="text-sm font-bold text-gray-800 dark:text-slate-200">Tambah UMKM Binaan Baru</h4>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs text-gray-400">Nama Usaha *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Contoh: Catering Orchid Berokah"
+                          value={newUmkm.name}
+                          onChange={(e) => setNewUmkm({ ...newUmkm, name: e.target.value })}
+                          className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-gray-400">Nama Pemilik (Owner) *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Contoh: Ibu Fatimah Az-Zahra"
+                          value={newUmkm.owner}
+                          onChange={(e) => setNewUmkm({ ...newUmkm, owner: e.target.value })}
+                          className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs text-gray-400">Kategori Usaha *</label>
+                        <select
+                          value={newUmkm.category}
+                          onChange={(e) => setNewUmkm({ ...newUmkm, category: e.target.value as Umkm['category'] })}
+                          className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white"
+                        >
+                          <option value="Kuliner">Kuliner</option>
+                          <option value="Jasa">Jasa</option>
+                          <option value="Fashion">Fashion</option>
+                          <option value="Sembako">Sembako</option>
+                          <option value="Lainnya">Lainnya</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-xs text-gray-400">Nomor WhatsApp (Angka saja, awali dengan 62) *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Contoh: 6281298765432"
+                          value={newUmkm.whatsapp || ''}
+                          onChange={(e) => setNewUmkm({ ...newUmkm, whatsapp: e.target.value.replace(/[^0-9]/g, '') })}
+                          className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs text-gray-400">Alamat Lengkap / No. Blok (Area OGP) *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Contoh: Blok A4 No. 12"
+                          value={newUmkm.address}
+                          onChange={(e) => setNewUmkm({ ...newUmkm, address: e.target.value })}
+                          className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-gray-400">Promo Khusus / Penawaran (Opsional)</label>
+                        <input
+                          type="text"
+                          placeholder="Contoh: Diskon 10% untuk pesanan pengajian masjid"
+                          value={newUmkm.promo}
+                          onChange={(e) => setNewUmkm({ ...newUmkm, promo: e.target.value })}
+                          className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="md:col-span-2">
+                        <label className="text-xs text-gray-400">Deskripsi Ringkas Usaha *</label>
+                        <textarea
+                          required
+                          rows={2}
+                          placeholder="Jelaskan jenis kuliner, layanan jasa, atau barang yang dijual secara singkat..."
+                          value={newUmkm.description}
+                          onChange={(e) => setNewUmkm({ ...newUmkm, description: e.target.value })}
+                          className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-gray-400">Cover Foto URL (Kosongkan untuk default)</label>
+                      <input
+                        type="text"
+                        placeholder="https://..."
+                        value={newUmkm.image}
+                        onChange={(e) => setNewUmkm({ ...newUmkm, image: e.target.value })}
+                        className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-gray-800 dark:text-white"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold uppercase cursor-pointer"
+                    >
+                      Daftarkan Usaha UMKM
+                    </button>
+                  </form>
+
+                  {/* List Database */}
+                  <div className="space-y-2">
+                    <h4 className="text-xs font-bold text-gray-400">Database UMKM Binaan ({umkmList.length})</h4>
+                    <div className="overflow-x-auto rounded-xl border border-gray-100 dark:border-slate-800">
+                      <table className="w-full text-xs text-left">
+                        <thead className="bg-slate-50 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
+                          <tr>
+                            <th className="p-3">Nama Usaha</th>
+                            <th className="p-3">Kategori</th>
+                            <th className="p-3">Pemilik</th>
+                            <th className="p-3">Alamat</th>
+                            <th className="p-3">Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {umkmList.map((shop) => (
+                            <tr key={shop.id} className="border-b border-gray-100 dark:border-slate-800/40 bg-white dark:bg-transparent">
+                              <td className="p-3 font-semibold text-gray-900 dark:text-white">{shop.name}</td>
+                              <td className="p-3">
+                                <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 text-[10px] font-semibold">
+                                  {shop.category}
+                                </span>
+                              </td>
+                              <td className="p-3 text-gray-600 dark:text-gray-300">{shop.owner}</td>
+                              <td className="p-3 text-gray-500 dark:text-gray-400">{shop.address}</td>
+                              <td className="p-3">
+                                <button
+                                  id={`delete-btn-umkm-${shop.id}`}
+                                  onClick={() => deleteItem(shop.id, 'umkm')}
+                                  className="p-1.5 bg-rose-50 hover:bg-rose-150 text-rose-500 rounded-lg cursor-pointer"
                                 >
                                   <Trash2 className="w-4 h-4" />
                                 </button>

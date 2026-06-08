@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Sparkles, Calendar, Heart, Clock, Compass, Users, BookOpen, Camera } from 'lucide-react';
+import { Sparkles, Calendar, Heart, Clock, Compass, Users, BookOpen, Store } from 'lucide-react';
 
 interface HeroProps {
   onTabChange: (tab: string) => void;
@@ -64,10 +64,13 @@ export default function Hero({ onTabChange }: HeroProps) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.15 }}
-          className="text-white font-serif font-black tracking-wider text-4xl sm:text-5xl md:text-7xl lg:text-8xl drop-shadow-md mb-2 uppercase"
+          className="text-white font-serif font-extrabold tracking-wider text-2xl sm:text-3xl md:text-4xl lg:text-5xl drop-shadow-md mb-3 uppercase"
         >
-          <span className="bg-gradient-to-r from-white via-amber-100 to-amber-200 bg-clip-text text-transparent">
-            DKM MASJID MAAR3
+          <span className="bg-gradient-to-r from-white via-amber-100 to-amber-200 bg-clip-text text-transparent text-sm sm:text-base md:text-lg block tracking-[0.2em] font-sans font-bold text-amber-300 mb-2">
+            DEWAN KEMAKMURAN MASJID (DKM)
+          </span>
+          <span className="bg-gradient-to-r from-white via-emerald-100 to-white bg-clip-text text-transparent text-3xl sm:text-4xl md:text-5xl lg:text-6xl block leading-tight">
+            MASJID MUNIROH ABDULLAH AR RUKBAN 3
           </span>
         </motion.h1>
 
@@ -76,9 +79,9 @@ export default function Hero({ onTabChange }: HeroProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="font-serif font-semibold text-xl sm:text-2xl md:text-3xl text-amber-300 tracking-wide mb-3 drop-shadow-sm"
+          className="font-serif font-semibold text-lg sm:text-xl md:text-2xl text-amber-300 tracking-wide mb-4 drop-shadow-sm uppercase"
         >
-          Masjid Muniroh Abdullah Ar-Rukban 3
+          (MAAR 3)
         </motion.p>
 
         {/* Location indicators */}
@@ -86,14 +89,14 @@ export default function Hero({ onTabChange }: HeroProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.45 }}
-          className="flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-4 text-emerald-100 dark:text-emerald-200 text-sm md:text-base font-medium max-w-xl mx-auto mb-10 pb-6 border-b border-white/10"
+          className="flex flex-col items-center justify-center space-y-2 text-emerald-100 dark:text-emerald-200 text-xs sm:text-sm md:text-base font-medium max-w-2xl mx-auto mb-10 pb-6 border-b border-white/10"
         >
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1.5 text-center">
             <Compass className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>Perumahan Orchid Green Park</span>
+            <span className="leading-relaxed">
+              Perumahan Muslim The Orchid Green Park, RT 8/RW 8, Kelurahan Pasir Putih, Kecamatan Sawangan, Kota Depok, Jawa Barat
+            </span>
           </div>
-          <span className="hidden sm:inline-block text-amber-400/60">•</span>
-          <span>Pasir Putih, Sawangan, Depok</span>
         </motion.div>
 
         {/* Beautiful responsive Quick-Nav Button Grid for the 6 key sections */}
@@ -137,14 +140,14 @@ export default function Hero({ onTabChange }: HeroProps) {
               <span className="text-xs font-bold text-white group-hover:text-emerald-950 font-sans tracking-wide">Kegiatan</span>
             </button>
 
-            {/* Galeri Button */}
+            {/* UMKM Button */}
             <button
-              id="hero-quick-galeri"
-              onClick={() => onTabChange('galeri')}
+              id="hero-quick-umkm"
+              onClick={() => onTabChange('umkm')}
               className="flex flex-col items-center justify-center p-4 rounded-xl bg-emerald-900/40 hover:bg-amber-400 border border-emerald-500/20 hover:border-amber-400 group hover:text-emerald-950 transition-all duration-300 hover:scale-[1.03] cursor-pointer"
             >
-              <Camera className="w-5 h-5 mb-2 text-amber-300 group-hover:text-emerald-950 transition-colors" />
-              <span className="text-xs font-bold text-white group-hover:text-emerald-950 font-sans tracking-wide">Galeri</span>
+              <Store className="w-5 h-5 mb-2 text-amber-300 group-hover:text-emerald-950 transition-colors" />
+              <span className="text-xs font-bold text-white group-hover:text-emerald-950 font-sans tracking-wide">UMKM</span>
             </button>
 
             {/* Donasi Button */}

@@ -27,32 +27,32 @@ export default function Footer({ onTabChange, onAdminClick }: FooterProps) {
           
           {/* Identity & Address Block */}
           <div className="md:col-span-4 space-y-4">
-            <div className="flex items-center space-x-2.5">
+            <div className="flex items-center space-x-3">
               <Logo size={58} className="filter drop-shadow-md shrink-0 duration-300 hover:rotate-6 transition-transform" />
               <div>
-                <h4 className="font-serif font-bold text-lg md:text-xl text-white tracking-wide leading-tight">
-                  MASJID MAAR 3
+                <h4 className="font-serif font-bold text-base md:text-lg text-white tracking-wide leading-tight">
+                  MASJID MUNIROH ABDULLAH AR RUKBAN 3
                 </h4>
-                <p className="text-[10px] text-emerald-300 font-sans tracking-wide">
-                  Muniroh Abdullah Ar-Rukban 3
+                <p className="text-[10px] text-amber-400 font-sans tracking-wide">
+                  DKM MAAR 3 • Orchid Green Park
                 </p>
               </div>
             </div>
 
             <p className="text-xs text-emerald-100/70 font-sans leading-relaxed">
-              Pusat dakwah, pembinaan ukhuwah islamiyah, pendidikan Al-Quran generasi bangsa, serta pengabdian sosial terpadu warga Orchid Green Park.
+              Pusat dakwah, pembinaan ukhuwah islamiyah, pendidikan Al-Quran generasi bangsa, serta pengabdian sosial terpadu.
             </p>
 
             <div className="space-y-3 pt-2 text-xs text-emerald-100/80">
               <div className="flex items-start">
-                <MapPin className="w-4 h-4 text-amber-400 shrink-0 mr- 2.5 mt-0.5" />
+                <MapPin className="w-4 h-4 text-amber-400 shrink-0 mr-2.5 mt-0.5" />
                 <p className="font-sans leading-relaxed">
-                  Perumahan Orchid Green Park, Kel. Pasir Putih, Kec. Sawangan, Kota Depok, Jawa Barat 16519
+                  Perumahan Muslim The Orchid Green Park, RT 8/RW 8, Kelurahan Pasir Putih, Kecamatan Sawangan, Kota Depok, Jawa Barat
                 </p>
               </div>
               <div className="flex items-center">
-                <Compass className="w-4 h-4 text-emerald-405 shrink-0 mr-2.5 text-amber-400" />
-                <span className="font-mono">Kecamatan Sawangan, Depok</span>
+                <Compass className="w-4 h-4 text-amber-400 shrink-0 mr-2.5" />
+                <span className="font-sans">Sawangan, Kota Depok</span>
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@ export default function Footer({ onTabChange, onAdminClick }: FooterProps) {
               Menu Cepat
             </h5>
             <div className="flex flex-col space-y-2.5 text-xs text-emerald-200Hover">
-              {['Beranda', 'Profil', 'Jadwal Sholat', 'Kajian', 'Kegiatan', 'Galeri', 'Artikel', 'Donasi'].map((item) => {
+              {['Beranda', 'Profil', 'Jadwal Sholat', 'Kajian', 'Kegiatan', 'UMKM', 'Artikel', 'Donasi'].map((item) => {
                 const id = item.toLowerCase().replace(' ', '');
                 return (
                   <button

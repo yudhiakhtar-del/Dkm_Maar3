@@ -9,15 +9,13 @@ interface ProfilProps {
 
 export default function Profil({ pengurusList }: ProfilProps) {
   const visiList = [
-    'Terwujudnya Masjid Muniroh Abdullah Ar-Rukban 3 sebagai pusat ibadah yang makmur, mandiri, dan berwawasan rahmatan lil alamin.',
-    'Membangun lingkungan warga Perumahan Orchid Green Park yang bertaqwa, harmonis, sehat, sejahtera, dan peduli sesama.',
+    'Menjadi masjid yang makmur, ramah jamaah, dan berdampak bagi lingkungan.',
   ];
 
   const misiList = [
-    'Membina aqidah, ibadah, dan akhlak umat berdasarkan Al-Quran dan Sunnah secara bersahabat.',
-    'Menyelenggarakan pelayanan peribadahan, kajian syar’i rutin, serta pendidikan generasi Qurani yang profesional.',
-    'Mengaktifkan gerakan ekonomi, sosial kemasyarakatan, serta kelestarian alam melalui terobosan Bank Sampah Orchid dan Posyandu.',
-    'Membina persatuan kerukunan warga Orchid Green Park dalam suasana aman dan ukhuwah.',
+    'Menyelenggarakan ibadah, pendidikan, dan dakwah yang berkualitas.',
+    'Memperkuat manajemen kemasjidan (idarah), pemakmuran (imarah), dan pemeliharaan (ri’ayah).',
+    'Membangun sinergi dengan lembaga pemerintah, ormas Islam, BAZNAS/BWI/sejenisnya, dan masyarakat.',
   ];
 
   const programKerjaList = [

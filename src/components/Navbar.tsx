@@ -34,7 +34,7 @@ export default function Navbar({
     { id: 'jadwal', label: 'Jadwal Sholat' },
     { id: 'kajian', label: 'Kajian' },
     { id: 'kegiatan', label: 'Kegiatan' },
-    { id: 'galeri', label: 'Galeri' },
+    { id: 'umkm', label: 'UMKM' },
     { id: 'artikel', label: 'Artikel' },
     { id: 'donasi', label: 'Donasi' },
   ];
@@ -53,7 +53,7 @@ export default function Navbar({
           {/* Logo Brand */}
           <div
             onClick={() => setCurrentTab('beranda')}
-            className="flex items-center space-x-3 cursor-pointer group"
+            className="flex items-center space-x-3 cursor-pointer group animate-fade-in"
           >
             {/* Official High-Fidelity DKM MAAR3 Logo Emblem */}
             <Logo size={58} className="group-hover:scale-105 duration-300 transition-transform filter drop-shadow-sm shrink-0" />

@@ -104,6 +104,22 @@ export default function KajianComponent({ kajianList }: KajianProps) {
                     </span>
                   </div>
 
+                  {/* Floating YouTube Play Button */}
+                  {kajian.youtubeUrl && (
+                    <a
+                      href={kajian.youtubeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute right-4 top-4 z-30 flex items-center justify-center w-8 h-8 rounded-full bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-650/40 border border-white/10 transition-all duration-300 hover:scale-110 active:scale-95"
+                      title="Tonton Live / Dokumentasi YouTube"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <svg className="w-3.5 h-3.5 fill-current ml-0.5" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </a>
+                  )}
+
                   {/* Top line banner ticket info */}
                   <div className="flex justify-between items-center z-10">
                     <span className="text-[10px] uppercase tracking-widest bg-amber-400 text-emerald-950 px-2.5 py-1 rounded-md font-extrabold shadow">
@@ -148,6 +164,23 @@ export default function KajianComponent({ kajianList }: KajianProps) {
                         <MapPin className="w-4 h-4 text-rose-500 mr-2 shrink-0" />
                         <span>{kajian.location} - Perumahan OGP, Sawangan</span>
                       </div>
+
+                      {kajian.youtubeUrl && (
+                        <div className="pt-3">
+                          <a
+                            href={kajian.youtubeUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center w-full py-2 px-3 rounded-xl bg-red-50 hover:bg-red-100/90 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-700 dark:text-red-400 text-[11px] font-bold tracking-wide border border-red-150/50 dark:border-red-500/10 transition-all duration-300"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <svg className="w-3.5 h-3.5 fill-current mr-2 text-red-650 dark:text-red-500 shrink-0" viewBox="0 0 24 24">
+                              <path d="M23.498 6.163c-.272-.997-1.055-1.78-2.052-2.052C19.64 3.75 12 3.75 12 3.75s-7.64 0-9.446.361c-.997.272-1.78 1.055-2.052 2.052C.14 7.969.14 12 .14 12s0 4.03.361 5.837c.272.997 1.055 1.78 2.052 2.052C4.36 20.25 12 20.25 12 20.25s7.64 0 9.446-.361c.997-.272 1.78-1.055 2.052-2.052C23.86 16.03 23.86 12 23.86 12s0-4.03-.362-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            </svg>
+                            <span>Tonton Live / Dokumentasi</span>
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
 

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Heart, QrCode, DollarSign, Users, Sparkles, CheckCircle2, ChevronRight, X } from 'lucide-react';
 import { DonasiCampaign, Donor } from '../types';
+// @ts-ignore
+import qrisDkmFlyer from '../assets/images/qris_dkm_maar3_1780566954034.png';
 
 interface DonasiProps {
   campaigns: DonasiCampaign[];
@@ -402,25 +404,13 @@ export default function DonasiComponent({ campaigns, onAddDonation, recentDonors
                     </div>
 
                     {/* QRIS Layout Frame */}
-                    <div className="bg-white p-4 rounded-3xl border-2 border-dashed border-emerald-800/30 inline-block">
-                      <div className="w-56 h-56 bg-slate-50 flex flex-col justify-between items-center p-3 relative shadow rounded-2xl">
-                        {/* QRIS Mock Identity Logo */}
-                        <div className="text-[10px] font-extrabold tracking-widest text-[#1565C0] w-full text-center border-b border-[#1565C0]/20 pb-0.5">
-                          QRIS • GPN
-                        </div>
-
-                        {/* QR Code central vector */}
-                        <div className="my-auto text-emerald-950/80">
-                          <svg className="w-36 h-36 mx-auto text-slate-900" viewBox="0 0 24 24" fill="currentColor">
-                            {/* Simple beautiful stylized vector QR matrix */}
-                            <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm14-2h4v4h-4V2zm2 2v2h-2V4h2zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 2h4v4h-4v-4zm-2-2h2v2h-2v-2zm4-4h2v2h-2v-2zM12 6h2v2h-2V6zm2 2h2v2h-2V8zm-2 4h2v2h-2v-2zm4 2h2v2h-2v-2zM8 4h2v2H8V4zm0 12h2v2H8v-2zM4 8h2v2H4V8zm0 12h2v2H4v-2z" />
-                          </svg>
-                        </div>
-
-                        <div className="text-[9px] font-sans font-extrabold text-emerald-800 w-full text-center">
-                          DKM MUNIROH ABDULLAH AR-RUKBAN 3
-                        </div>
-                      </div>
+                    <div className="bg-white p-3 rounded-3xl border-2 border-dashed border-emerald-800/30 inline-block shadow-md max-w-[280px]">
+                      <img
+                        src={qrisDkmFlyer}
+                        alt="QRIS ZISWAF DKM Masjid MAAR3"
+                        className="w-56 h-auto rounded-2xl border border-gray-100 mx-auto"
+                        referrerPolicy="no-referrer"
+                      />
                     </div>
 
                     {/* Invoice details */}

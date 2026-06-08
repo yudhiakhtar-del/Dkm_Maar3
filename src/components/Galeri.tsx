@@ -22,7 +22,7 @@ export default function GaleriComponent({ galeriList }: GaleriProps) {
     'KBMA',
     'Ramadhan',
     'Idul Adha',
-    'Kerja Bakti',
+    'Kopsyar OGP',
   ];
 
   // Filter photos

@@ -24,13 +24,14 @@ export interface Kegiatan {
     | 'KBMA'
     | 'Ramadhan'
     | 'Idul Adha'
-    | 'Kerja Bakti';
+    | 'Kopsyar OGP';
   description: string;
   date: string;
   time: string;
   location: string;
   image: string;
   status: 'Mendatang' | 'Sedang Berjalan' | 'Selesai';
+  youtubeUrl?: string;
 }
 
 export interface Kajian {
@@ -41,6 +42,7 @@ export interface Kajian {
   location: string;
   day: string;
   image: string;
+  youtubeUrl?: string;
 }
 
 export interface Galeri {
@@ -84,4 +86,16 @@ export interface SholatTime {
   time: string;
   countdown?: string;
   passed?: boolean;
+}
+
+export interface Umkm {
+  id: string;
+  name: string;
+  owner: string;
+  category: 'Kuliner' | 'Jasa' | 'Fashion' | 'Sembako' | 'Lainnya';
+  description: string;
+  address: string;
+  whatsapp: string;
+  image?: string;
+  promo?: string;
 }

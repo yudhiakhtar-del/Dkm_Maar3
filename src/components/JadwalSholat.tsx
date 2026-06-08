@@ -3,6 +3,98 @@ import { motion } from 'motion/react';
 import { Clock, MapPin, Loader2, RefreshCw, Volume2, VolumeX, AlertCircle } from 'lucide-react';
 import { SholatTime } from '../types';
 
+interface ParsedHijri {
+  day: string;
+  month: string;
+  year: string;
+}
+
+const normalizeHijriStr = (str: string): string => {
+  return str
+    .toLowerCase()
+    .normalize('NFD') // Decomposes combined characters with accents or macrons (e.g. ī -> i)
+    .replace(/[\u0300-\u036f]/g, '') // Removes accent marks
+    .replace(/ʿ/g, "'") // Standardize Arabic ayn
+    .replace(/’/g, "'") // Standardize curly quotes
+    .trim();
+};
+
+const translateHijriMonth = (monthStr: string): string => {
+  const m = normalizeHijriStr(monthStr);
+  
+  if (m.includes('muharram')) return 'Muharram';
+  if (m.includes('safar')) return 'Safar';
+  
+  if (m.includes('rabi') && (m.includes('awwal') || m.includes('1') || m.includes(' i') || m.endsWith(' i'))) return "Rabi'ul Awwal";
+  if (m.includes('rabi') && (m.includes('akhir') || m.includes('thani') || m.includes('sani') || m.includes('2') || m.includes(' ii') || m.endsWith(' ii'))) return "Rabi'ul Akhir";
+  
+  if (m.includes('jumad') && (m.includes('ula') || m.includes('awwal') || m.includes('1') || m.includes(' i') || m.endsWith(' i'))) return "Jumadil Awwal";
+  if (m.includes('jumad') && (m.includes('akhir') || m.includes('thani') || m.includes('sani') || m.includes('2') || m.includes(' ii') || m.endsWith(' ii'))) return "Jumadil Akhir";
+  
+  if (m.includes('rajab')) return 'Rajab';
+  if (m.includes('sya\'ban') || m.includes('sha\'ban') || m.includes('shaban') || m.includes('syaban')) return "Sya'ban";
+  if (m.includes('ramadhan') || m.includes('ramadan')) return 'Ramadhan';
+  if (m.includes('syawal') || m.includes('shawwal') || m.includes('shawal')) return 'Syawal';
+  
+  if (m.includes('qa\'dah') || m.includes('qi\'dah') || m.includes('qaidah') || m.includes('qadah') || m.includes('kaidah')) return "Dzulqa'dah";
+  if (m.includes('hijjah') || m.includes('hijah')) return 'Dzulhijjah';
+  
+  // Direct dictionary mapping if substring matches did not trigger
+  const directMappings: Record<string, string> = {
+    'muharram': 'Muharram',
+    'safar': 'Safar',
+    'rabiul awwal': "Rabi'ul Awwal",
+    'rabiul akhir': "Rabi'ul Akhir",
+    'jumadil awwal': 'Jumadil Awwal',
+    'jumadil akhir': 'Jumadil Akhir',
+    'rajab': 'Rajab',
+    'syaban': "Sya'ban",
+    'ramadhan': 'Ramadhan',
+    'syawal': 'Syawal',
+    'dzulqadah': "Dzulqa'dah",
+    'dzulqaidah': "Dzulqa'dah",
+    'zulkaidah': "Dzulqa'dah",
+    'dzulhijjah': 'Dzulhijjah',
+    'dzulhijah': 'Dzulhijjah',
+    'zulhijah': 'Dzulhijjah'
+  };
+
+  return directMappings[m] || (monthStr.charAt(0).toUpperCase() + monthStr.slice(1));
+};
+
+const getParsedHijri = (hijriStr: string): ParsedHijri => {
+  // Strip parentheses first, clean double spaces
+  const cleanStr = hijriStr.replace(/\(.*?\)/g, '').replace(/\s+/g, ' ').trim();
+  
+  // Find a 4-digit number like 1447, 1448
+  const yearMatch = cleanStr.match(/\b\d{4}\b/);
+  
+  if (yearMatch && yearMatch.index !== undefined) {
+    const yearIndex = yearMatch.index;
+    const dateAndMonth = cleanStr.substring(0, yearIndex).trim();
+    const yearPart = cleanStr.substring(yearIndex).trim();
+    
+    // Split date and month
+    const firstSpace = dateAndMonth.indexOf(' ');
+    if (firstSpace !== -1) {
+      const day = dateAndMonth.substring(0, firstSpace).trim();
+      const monthPart = dateAndMonth.substring(firstSpace + 1).trim();
+      const translatedMonth = translateHijriMonth(monthPart);
+      
+      return { day, month: translatedMonth, year: yearPart };
+    }
+  }
+  
+  // Fallback if regex fails to match a 4-digit year format
+  const parts = cleanStr.split(' ');
+  if (parts.length >= 3) {
+    const translatedMonth = translateHijriMonth(parts[1]);
+    return { day: parts[0], month: translatedMonth, year: parts.slice(2).join(' ') };
+  }
+  
+  return { day: '14', month: 'Dzulhijjah', year: '1447 H' };
+};
+
 export default function JadwalSholat() {
   const [times, setTimes] = useState<SholatTime[]>([]);
   const [nextSholat, setNextSholat] = useState<SholatTime | null>(null);
@@ -154,6 +246,43 @@ export default function JadwalSholat() {
     });
   };
 
+  // Get Dzuhur and Maghrib times or fallback
+  const dzuhurTimeStr = times.find(t => t.name === 'Dzuhur')?.time || '11:58';
+  const maghribTimeStr = times.find(t => t.name === 'Maghrib')?.time || '17:52';
+
+  const getIslamicTimes = () => {
+    const currentSecs = currentTime.getHours() * 3600 + currentTime.getMinutes() * 60 + currentTime.getSeconds();
+    
+    // Parse Dzuhur
+    const [dzH, dzM] = dzuhurTimeStr.split(':').map(Number);
+    const dzuhurSecs = (dzH || 11) * 3600 + (dzM || 58) * 60;
+    
+    // Jam Istiwa (noon/zawal is exactly 12:00:00)
+    const istiwaSecs = (currentSecs - dzuhurSecs + 12 * 3600 + 24 * 3600) % (24 * 3600);
+    const istH = Math.floor(istiwaSecs / 3600);
+    const istM = Math.floor((istiwaSecs % 3600) / 60);
+    const istS = istiwaSecs % 60;
+    
+    // Parse Maghrib
+    const [magH, magM] = maghribTimeStr.split(':').map(Number);
+    const maghribSecs = (magH || 17) * 3600 + (magM || 52) * 60;
+    
+    // Jam Ghurubiyah (Maghrib / Sunset is exactly 06:00:00)
+    const ghurubiyahSecs = (currentSecs - maghribSecs + 6 * 3600 + 24 * 3600) % (24 * 3600);
+    const ghurH = Math.floor(ghurubiyahSecs / 3600);
+    const ghurM = Math.floor((ghurubiyahSecs % 3600) / 60);
+    const ghurS = ghurubiyahSecs % 60;
+    
+    const pad = (num: number) => num.toString().padStart(2, '0');
+    
+    return {
+      istiwa: `${pad(istH)}:${pad(istM)}:${pad(istS)}`,
+      ghurubiyah: `${pad(ghurH)}:${pad(ghurM)}:${pad(ghurS)}`
+    };
+  };
+
+  const islamicClocks = getIslamicTimes();
+
   return (
     <div id="jadwal-sholat-section" className="bg-slate-50 dark:bg-slate-900 transition-colors">
       
@@ -247,21 +376,108 @@ export default function JadwalSholat() {
               </div>
             </div>
 
-            {/* Middle Row: Big Digital Timer */}
-            <div className="my-6 z-10">
-              <p className="text-emerald-300 text-xs font-semibold uppercase tracking-widest mb-1">
-                Jam Digital Terkini
-              </p>
-              <h3 className="text-4xl md:text-5xl font-mono font-bold tracking-tight text-white drop-shadow-sm flex items-center">
-                <Clock className="w-7 h-7 text-amber-400 mr-2.5 animate-pulse" />
-                {currentTime.toLocaleTimeString('id-ID')}
-              </h3>
-              <p className="text-slate-300 text-xs font-medium mt-1">
-                {getFormatGregorian()}
-              </p>
-              <p className="text-amber-300 font-serif font-semibold text-xs mt-1 italic tracking-wide">
-                {hijriDate}
-              </p>
+            {/* Middle Row: Big Digital Timer & Islamic Astronomy Clocks */}
+            <div className="mt-4 mb-3 z-10 space-y-4">
+              <div>
+                <p className="text-emerald-300 text-[10px] font-bold uppercase tracking-widest mb-1">
+                  Jam Gregorian Terkini (WIB)
+                </p>
+                <h3 className="text-3xl md:text-4xl font-mono font-bold tracking-tight text-white drop-shadow-sm flex items-center">
+                  <Clock className="w-6 h-6 text-amber-400 mr-2 animate-pulse" />
+                  {currentTime.toLocaleTimeString('id-ID')}
+                </h3>
+                <p className="text-slate-300 text-xs md:text-sm font-medium mt-1 shadow-sm">
+                  {getFormatGregorian()}
+                </p>
+              </div>
+
+              {/* Islamic Solar & Sunset Clocks Container */}
+              <div className="bg-emerald-950/40 border border-emerald-500/20 rounded-2xl p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                  <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">
+                    Penunjuk Waktu Falakiyah (Jam Versi Islam)
+                  </span>
+                  <span className="text-xs" title="Sistem koordinat waktu tradisional umat Islam berdasarkan rasi matahari asli dan waktu pergantian hari versi Hijriyah">🕌</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Jam Istiwa (Zawal clock) */}
+                  <div className="bg-white/5 p-2.5 rounded-xl border border-white/5 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center space-x-1 mb-1">
+                        <span className="text-amber-400 text-xs shrink-0">☀️</span>
+                        <span className="text-[9px] text-emerald-200 font-extrabold uppercase tracking-wider">
+                          Jam Istiwa
+                        </span>
+                      </div>
+                      <p className="text-[9px] text-slate-300 leading-tight">
+                        Zawal / Dzuhur disetel tepat pukul 12:00:00 (Matahari di Kulminasi Atas)
+                      </p>
+                    </div>
+                    <div className="mt-3 pt-1 border-t border-white/5">
+                      <span className="text-base md:text-lg font-mono font-extrabold text-amber-300 tracking-wider">
+                        {islamicClocks.istiwa}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Jam Ghurubiyah (Sunset-based clock) */}
+                  <div className="bg-white/5 p-2.5 rounded-xl border border-white/5 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center space-x-1 mb-1">
+                        <span className="text-emerald-400 text-xs shrink-0">🌙</span>
+                        <span className="text-[9px] text-emerald-200 font-extrabold uppercase tracking-wider">
+                          Jam Ghurubiyah
+                        </span>
+                      </div>
+                      <p className="text-[9px] text-slate-300 leading-tight">
+                        Maghrib / Terbenam disetel tepat pukul 06:00:00 (Awal Hari Baru Hijriyah)
+                      </p>
+                    </div>
+                    <div className="mt-3 pt-1 border-t border-white/5">
+                      <span className="text-base md:text-lg font-mono font-extrabold text-amber-300 tracking-wider">
+                        {islamicClocks.ghurubiyah}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Beautiful, Large, Islamic Hijri Calendar Card */}
+            <div className="bg-gradient-to-r from-amber-500/15 to-emerald-500/10 border border-amber-500/30 rounded-2xl p-4 my-3 backdrop-blur-md z-10 relative overflow-hidden flex items-center space-x-4 shadow-[inset_0_1px_2px_rgba(255,255,255,0.05),0_4px_12px_rgba(0,0,0,0.15)]">
+              {/* Islamic Pattern Back Ornament */}
+              <div className="absolute right-2 -bottom-2 opacity-15 pointer-events-none w-20 h-20 text-amber-400">
+                <svg viewBox="0 0 100 100" fill="currentColor">
+                  <path d="M50 0 L60 30 L90 20 L70 50 L100 60 L70 70 L90 90 L60 80 L50 100 L40 80 L10 90 L30 70 L0 60 L30 50 L10 20 L40 30 Z" />
+                </svg>
+              </div>
+
+              {/* Large Arabic-inspired Number Emblem for Day */}
+              <div className="bg-gradient-to-br from-amber-400 to-amber-500 text-emerald-950 w-16 h-16 rounded-2xl flex flex-col items-center justify-center border border-amber-300/50 shadow-md shrink-0">
+                <span className="font-serif font-black text-3xl leading-none">
+                  {getParsedHijri(hijriDate).day}
+                </span>
+                <span className="font-mono text-[9px] font-extrabold tracking-widest uppercase leading-none mt-1 opacity-80">
+                  HIJRIAH
+                </span>
+              </div>
+
+              {/* Month & Year Details */}
+              <div className="flex-1">
+                <div className="flex items-center space-x-1.5">
+                  <span className="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                    Tanggal Hijriyah
+                  </span>
+                  <span className="text-sm">🌙</span>
+                </div>
+                <h4 className="text-xl md:text-2xl font-serif font-extrabold text-amber-300 leading-tight mt-1 tracking-wide uppercase drop-shadow-sm">
+                  {getParsedHijri(hijriDate).month}
+                </h4>
+                <p className="text-xs md:text-sm font-semibold text-emerald-100 tracking-wider">
+                  {getParsedHijri(hijriDate).year}
+                </p>
+              </div>
             </div>
 
             {/* Bottom Row: Next Sholat Countdown Card with premium border details */}

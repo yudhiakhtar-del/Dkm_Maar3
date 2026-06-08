@@ -10,6 +10,15 @@ interface KegiatanProps {
 export default function KegiatanComponent({ kegiatanList }: KegiatanProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [playingId, setPlayingId] = useState<string | null>(null);
+
+  // Helper to extract YouTube video ID
+  const getYouTubeId = (url: string): string | null => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
 
   const categories = [
     'Semua',
@@ -22,7 +31,7 @@ export default function KegiatanComponent({ kegiatanList }: KegiatanProps) {
     'KBMA',
     'Ramadhan',
     'Idul Adha',
-    'Kerja Bakti',
+    'Kopsyar OGP',
   ];
 
   // Filtering Logic
@@ -133,6 +142,96 @@ export default function KegiatanComponent({ kegiatanList }: KegiatanProps) {
           </div>
         </div>
 
+        {/* Dedicated Panel Kopsyar OGP when selected */}
+        {selectedCategory === 'Kopsyar OGP' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-12 p-8 rounded-3xl bg-gradient-to-r from-emerald-950 to-teal-950 text-white border border-amber-400/25 shadow-xl relative overflow-hidden"
+          >
+            {/* Ambient Background Grid and Shapes */}
+            <div className="absolute inset-0 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] opacity-5 pointer-events-none" />
+            <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-amber-400/10 rounded-full blur-2xl" />
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+              
+              {/* Text / Context Side */}
+              <div className="lg:col-span-7 space-y-4 text-left">
+                <div className="inline-flex items-center space-x-1.5 bg-amber-400/20 border border-amber-400/30 px-3 py-1 rounded-full text-[10px] text-amber-300 font-bold uppercase tracking-wider">
+                  <span>Sinergi Ekonomi Syariah Komunitas</span>
+                </div>
+                
+                <h3 className="text-2xl md:text-3xl font-serif font-black text-white leading-tight">
+                  Koperasi Syariah (Kopsyar) Orchid Green Park
+                </h3>
+                
+                <p className="text-xs md:text-sm text-emerald-100/90 leading-relaxed font-sans">
+                  Sinergitas pemberdayaan ekonomi warga perumahan Orchid Green Park berlandaskan syariat Islam yang adil dan transparan. Kopsyar OGP hadir sebagai solusi keuangan mikro tanpa riba, mendidik jiwa entrepreneurship, serta merangkul potensi UMKM lokal menuju keberkahan bersama.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs text-emerald-200">
+                  <div className="flex items-start space-x-2">
+                    <span className="text-amber-400 text-sm mt-0.5">✔</span>
+                    <span><strong>Transaksi Halal:</strong> Bebas dari unsur riba, maysir, dan gharar demi meraih kemurnian usaha.</span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="text-amber-400 text-sm mt-0.5">✔</span>
+                    <span><strong>Pemberdayaan UMKM:</strong> Akses permodalan syariah tanpa jaminan memberatkan bagi warga.</span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="text-amber-400 text-sm mt-0.5">✔</span>
+                    <span><strong>Bagi Hasil Adil:</strong> Sistem bagi hasil (*shirkah*) yang berkah, transparan dan berkeadilan.</span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="text-amber-400 text-sm mt-0.5">✔</span>
+                    <span><strong>Dana Sosial & Infaq:</strong> Sebagian keuntungan dialokasikan untuk santunan anak yatim & dhuafa.</span>
+                  </div>
+                </div>
+
+                <div className="pt-4 flex flex-wrap gap-3">
+                  <a
+                    href="https://www.youtube.com/watch?v=Kd9R_f23dH8"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center bg-red-650 hover:bg-red-600 text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-lg shadow-red-650/20 transition-all space-x-1.5"
+                  >
+                    <svg className="w-4 h-4 fill-current text-white shrink-0" viewBox="0 0 24 24">
+                      <path d="M23.498 6.163c-.272-.997-1.055-1.78-2.052-2.052C19.64 3.75 12 3.75 12 3.75s-7.64 0-9.446.361c-.997.272-1.78 1.055-2.052 2.052C.14 7.969.14 12 .14 12s0 4.03.361 5.837c.272.997 1.055 1.78 2.052 2.052C4.36 20.25 12 20.25 12 20.25s7.64 0 9.446-.361c.997-.272 1.78-1.055 2.052-2.052C23.86 16.03 23.86 12 23.86 12s0-4.03-.362-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                    <span>Buka Video di YouTube</span>
+                  </a>
+                  <button
+                    onClick={() => {
+                      const card = document.getElementById('kegiatan-card-keg-10');
+                      if (card) {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }
+                      setPlayingId('keg-10');
+                    }}
+                    className="inline-flex items-center justify-center bg-amber-500 hover:bg-amber-400 text-emerald-950 text-xs font-extrabold py-2.5 px-4 rounded-xl shadow-md transition-all space-x-1.5"
+                  >
+                    <span>Putar Video Di Bawah</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Video Embed Player on the Right */}
+              <div className="lg:col-span-5 h-full">
+                <div className="relative aspect-video rounded-2xl overflow-hidden bg-slate-950 border border-white/10 shadow-2xl">
+                  <iframe
+                    title="Sosialisasi Kopsyar OGP"
+                    src="https://www.youtube.com/embed/Kd9R_f23dH8?rel=0&modestbranding=1"
+                    className="w-full h-full border-0 absolute inset-0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+
+            </div>
+          </motion.div>
+        )}
+
         {/* Dynamic Activity Card Display Grid */}
         <motion.div 
           layout
@@ -140,68 +239,142 @@ export default function KegiatanComponent({ kegiatanList }: KegiatanProps) {
         >
           <AnimatePresence mode="popLayout">
             {filteredKegiatan.length > 0 ? (
-              filteredKegiatan.map((keg) => (
-                <motion.div
-                  layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
-                  id={`kegiatan-card-${keg.id}`}
-                  key={keg.id}
-                  className="group bg-white dark:bg-slate-900 overflow-hidden rounded-3xl border border-gray-100 dark:border-slate-800 shadow-md hover:shadow-xl hover:border-emerald-500/20 transition-all flex flex-col justify-between"
-                >
-                  {/* Image Container with Zoom effect */}
-                  <div className="relative h-48 overflow-hidden bg-slate-800">
-                    <img
-                      src={keg.image}
-                      alt={keg.title}
-                      className="w-full h-full object-cover group-hover:scale-105 duration-500 transition-all filter brightness-[0.9]"
-                    />
-                    
-                    {/* Status Badge */}
-                    <div className="absolute top-4 left-4 z-10 shadow-lg">
-                      <span className={`text-[9px] uppercase font-bold tracking-widest px-3 py-1 rounded-full ${getStatusColor(keg.status)}`}>
-                        {keg.status}
-                      </span>
+              filteredKegiatan.map((keg) => {
+                const videoId = getYouTubeId(keg.youtubeUrl || '');
+                const isCurrentlyPlaying = playingId === keg.id && videoId;
+
+                return (
+                  <motion.div
+                    layout
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
+                    id={`kegiatan-card-${keg.id}`}
+                    key={keg.id}
+                    className="group bg-white dark:bg-slate-900 overflow-hidden rounded-3xl border border-gray-100 dark:border-slate-800 shadow-md hover:shadow-xl hover:border-emerald-500/20 transition-all flex flex-col justify-between"
+                  >
+                    {/* Image or Video player Container */}
+                    <div className="relative h-48 overflow-hidden bg-slate-800">
+                      {isCurrentlyPlaying ? (
+                        <div className="absolute inset-0 w-full h-full">
+                          <iframe
+                            title={keg.title}
+                            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
+                            className="w-full h-full border-0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                          />
+                          {/* Close Video button inside container overlay */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPlayingId(null);
+                            }}
+                            className="absolute top-2 right-2 z-30 bg-black/70 hover:bg-black text-white text-[10px] font-bold px-2 py-1 rounded-md transition-colors"
+                          >
+                            Tutup [X]
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <img
+                            src={keg.image}
+                            alt={keg.title}
+                            className="w-full h-full object-cover group-hover:scale-105 duration-500 transition-all filter brightness-[0.9]"
+                          />
+                          
+                          {/* Status Badge */}
+                          <div className="absolute top-4 left-4 z-10 shadow-lg">
+                            <span className={`text-[9px] uppercase font-bold tracking-widest px-3 py-1 rounded-full ${getStatusColor(keg.status)}`}>
+                              {keg.status}
+                            </span>
+                          </div>
+
+                          {/* Category Overlay tag */}
+                          <div className="absolute bottom-4 left-4 z-10 flex items-center space-x-1.5 bg-black/50 backdrop-blur-md px-3 py-1 rounded-md text-white border border-white/10">
+                            <Tag className="w-3 h-3 text-amber-400" />
+                            <span className="text-[10px] font-semibold tracking-wide">{keg.category}</span>
+                          </div>
+
+                          {/* Floating YouTube Play Button */}
+                          {keg.youtubeUrl && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setPlayingId(keg.id);
+                              }}
+                              className="absolute right-4 top-4 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-red-650 hover:bg-red-650 text-white shadow-lg shadow-red-650/40 border border-white/10 transition-all duration-300 hover:scale-110 active:scale-95"
+                              title="Putar Video secara Langsung"
+                            >
+                              <svg className="w-3.5 h-3.5 fill-current ml-0.5" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z" stroke="currentColor" strokeWidth="1" />
+                              </svg>
+                            </button>
+                          )}
+                        </>
+                      )}
                     </div>
 
-                    {/* Category Overlay tag */}
-                    <div className="absolute bottom-4 left-4 z-10 flex items-center space-x-1.5 bg-black/50 backdrop-blur-md px-3 py-1 rounded-md text-white border border-white/10">
-                      <Tag className="w-3 h-3 text-amber-400" />
-                      <span className="text-[10px] font-semibold tracking-wide">{keg.category}</span>
-                    </div>
-                  </div>
+                    {/* Body textual copy */}
+                    <div className="p-6 flex-1 flex flex-col justify-between text-left">
+                      <div className="space-y-3.5">
+                        <h4 className="text-lg font-serif font-bold text-gray-950 dark:text-white leading-snug group-hover:text-emerald-700 dark:group-hover:text-amber-400 transition-colors line-clamp-2" id={`kegiatan-title-${keg.id}`}>
+                          {keg.title}
+                        </h4>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-sans line-clamp-3">
+                          {keg.description}
+                        </p>
+                      </div>
 
-                  {/* Body textual copy */}
-                  <div className="p-6 flex-1 flex flex-col justify-between text-left">
-                    <div className="space-y-3.5">
-                      <h4 className="text-lg font-serif font-bold text-gray-950 dark:text-white leading-snug group-hover:text-emerald-700 dark:group-hover:text-amber-400 transition-colors line-clamp-2">
-                        {keg.title}
-                      </h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-sans line-clamp-3">
-                        {keg.description}
-                      </p>
-                    </div>
+                      {/* Footer stats details */}
+                      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-slate-800/80 space-y-2">
+                        <div className="flex items-center text-[11px] text-gray-600 dark:text-gray-400 font-medium">
+                          <Calendar className="w-3.5 h-3.5 text-emerald-600 dark:text-amber-500 mr-2 shrink-0" />
+                          <span>{keg.date}</span>
+                        </div>
+                        <div className="flex items-center text-[11px] text-gray-600 dark:text-gray-400 font-medium">
+                          <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-amber-500 mr-2 shrink-0" />
+                          <span>{keg.time}</span>
+                        </div>
+                        <div className="flex items-center text-[11px] text-gray-600 dark:text-gray-400 font-medium">
+                          <MapPin className="w-3.5 h-3.5 text-rose-500 mr-2 shrink-0" />
+                          <span>{keg.location}</span>
+                        </div>
 
-                    {/* Footer stats details */}
-                    <div className="mt-6 pt-4 border-t border-gray-100 dark:border-slate-800/80 space-y-2">
-                      <div className="flex items-center text-[11px] text-gray-600 dark:text-gray-400 font-medium">
-                        <Calendar className="w-3.5 h-3.5 text-emerald-600 dark:text-amber-500 mr-2 shrink-0" />
-                        <span>{keg.date}</span>
-                      </div>
-                      <div className="flex items-center text-[11px] text-gray-600 dark:text-gray-400 font-medium">
-                        <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-amber-500 mr-2 shrink-0" />
-                        <span>{keg.time}</span>
-                      </div>
-                      <div className="flex items-center text-[11px] text-gray-600 dark:text-gray-400 font-medium">
-                        <MapPin className="w-3.5 h-3.5 text-rose-500 mr-2 shrink-0" />
-                        <span>{keg.location}</span>
+                        {keg.youtubeUrl && (
+                          <div className="pt-3 space-y-2">
+                            {/* Toggleable Embedded Play/Close Button */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setPlayingId(isCurrentlyPlaying ? null : keg.id);
+                              }}
+                              className="w-full flex items-center justify-center py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-800 dark:text-white text-[11px] font-bold tracking-wide border border-gray-200 dark:border-slate-750 transition-all duration-300"
+                            >
+                              <span className="mr-1.5">{isCurrentlyPlaying ? '⏸ Stop Video' : '▶ Putar Pemutar Panel'}</span>
+                            </button>
+
+                            {/* Direct External Link */}
+                            <a
+                              href={keg.youtubeUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center w-full py-2 px-3 rounded-xl bg-red-50 hover:bg-red-100/90 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-700 dark:text-red-400 text-[11px] font-bold tracking-wide border border-red-150/50 dark:border-red-500/10 transition-all duration-300"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <svg className="w-3.5 h-3.5 fill-current mr-2 text-red-650 dark:text-red-500 shrink-0" viewBox="0 0 24 24">
+                                <path d="M23.498 6.163c-.272-.997-1.055-1.78-2.052-2.052C19.64 3.75 12 3.75 12 3.75s-7.64 0-9.446.361c-.997.272-1.78 1.055-2.052 2.052C.14 7.969.14 12 .14 12s0 4.03.361 5.837c.272.997 1.055 1.78 2.052 2.052C4.36 20.25 12 20.25 12 20.25s7.64 0 9.446-.361c.997-.272 1.78-1.055 2.052-2.052C23.86 16.03 23.86 12 23.86 12s0-4.03-.362-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                              </svg>
+                              <span>Buka di YouTube &rarr;</span>
+                            </a>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))
+                  </motion.div>
+                );
+              })
             ) : (
               <div className="col-span-full py-16 text-center">
                 <p className="text-sm text-gray-500 dark:text-gray-400 font-sans">

@@ -19,9 +19,21 @@ import sirahNabawiyahFlyer from './assets/images/sirah_nabawiyah_flyer_178023926
 import bankSampahOrchidFlyer from './assets/images/bank_sampah_orchid_flyer_1780239512122.png';
 // @ts-ignore
 import ustadzIdrusAbidin from './assets/images/ustadz_idrus_abidin_1780270163083.png';
+// @ts-ignore
+import kbmaFlyer from './assets/images/kbma_flyer_1780456335511.png';
+// @ts-ignore
+import posyanduFlyer from './assets/images/posyandu_orchid_flyer_1780564362836.png';
+// @ts-ignore
+import sijumDistribusiFlyer from './assets/images/sijum_distribusi_makanan_baru_1780565800000_1780565764007.png';
+// @ts-ignore
+import ogpFarmFlyer from './assets/images/ogp_farm_hidroponik_baru_1780565995709.png';
+// @ts-ignore
+import idulAdhaFlyer from './assets/images/idul_adha_qurban_baru_1780566311000_1780566182958.png';
+// @ts-ignore
+import kerjaBaktiFlyer from './assets/images/kerja_bakti_islamic_1780566382364.png';
 
 // Types
-import { Artikel, Kegiatan, Kajian, Galeri, DonasiCampaign, Pengurus, Donor } from './types';
+import { Artikel, Kegiatan, Kajian, Galeri, DonasiCampaign, Pengurus, Donor, Umkm } from './types';
 
 // Initial Mock Content
 import {
@@ -31,7 +43,10 @@ import {
   INITIAL_GALERI,
   INITIAL_DONASI,
   INITIAL_PENGURUS,
+  INITIAL_UMKM,
 } from './data/initialData';
+
+import UmkmPanel from './components/UmkmPanel';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<string>('beranda');
@@ -40,18 +55,72 @@ export default function App() {
   // Core synchronized lists for CRUD administration operations
   const [artikelList, setArtikelList] = useState<Artikel[]>(() => {
     const cached = localStorage.getItem('maar3_artikel');
-    return cached ? JSON.parse(cached) : INITIAL_ARTIKEL;
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      const merged = [...parsed];
+      INITIAL_ARTIKEL.forEach(defaultItem => {
+        if (!merged.some(item => item.id === defaultItem.id)) {
+          merged.push(defaultItem);
+        }
+      });
+      return merged;
+    }
+    return INITIAL_ARTIKEL;
   });
 
   const [kegiatanList, setKegiatanList] = useState<Kegiatan[]>(() => {
     const cached = localStorage.getItem('maar3_kegiatan');
     if (cached) {
       const parsed = JSON.parse(cached);
-      return parsed.map((item: Kegiatan) => {
-        if (item.id === 'keg-3') {
-          return { ...item, image: bankSampahOrchidFlyer };
+      const merged = [...parsed];
+      INITIAL_KEGIATAN.forEach(defaultItem => {
+        if (!merged.some(item => item.id === defaultItem.id)) {
+          merged.push(defaultItem);
         }
-        return item;
+      });
+      return merged.map((item: Kegiatan) => {
+        const defaultIconItem = INITIAL_KEGIATAN.find(d => d.id === item.id);
+        const updated = { ...item };
+        if (defaultIconItem && !updated.youtubeUrl) {
+          updated.youtubeUrl = defaultIconItem.youtubeUrl;
+        }
+        if (item.id === 'keg-2') {
+          return { ...updated, image: sijumDistribusiFlyer };
+        }
+        if (item.id === 'keg-3') {
+          return { ...updated, image: bankSampahOrchidFlyer };
+        }
+        if (item.id === 'keg-4') {
+          return { ...updated, image: posyanduFlyer };
+        }
+        if (item.id === 'keg-5') {
+          return {
+            ...updated,
+            title: 'Ogp Sport : Badminton, Volly, Tenis Meja, Sepeda, Lari',
+            description: 'Sarana olahraga bersama bagi warga perumahan yang meliputi Badminton, Volly, Tenis Meja, Sepeda, dan Lari guna mempererat silaturahim dan menjaga kesehatan fisik bersama.'
+          };
+        }
+        if (item.id === 'keg-6') {
+          return {
+            ...updated,
+            title: 'KBMA: Kelompok Belajar Membaca Al-Qur\'an',
+            description: 'Gerakan Nasional Pengentasan Buta Aksara Al-Qur\'an dengan Metode Ishlah di Masjid MAAR 3 OGP. Program ini gratis! Manfaat mencakup kemampuan membaca Al-Qur\'an dari dasar, e-sertifikat dari LPQQ Kota Depok, silaturahmi, dan menjadi bagian dari pengentasan butasa aksara nasional.',
+            date: 'Setiap Ahad',
+            time: 'Ba’da Maghrib - Isya',
+            location: 'Masjid MAAR3 Perum. Orchid Green Park',
+            image: kbmaFlyer
+          };
+        }
+        if (item.id === 'keg-8') {
+          return { ...updated, image: idulAdhaFlyer };
+        }
+        if (item.id === 'keg-9') {
+          return { ...updated, image: ogpFarmFlyer };
+        }
+        if (item.id === 'keg-10') {
+          return { ...updated, image: kerjaBaktiFlyer };
+        }
+        return updated;
       });
     }
     return INITIAL_KEGIATAN;
@@ -62,16 +131,21 @@ export default function App() {
     if (cached) {
       const parsed = JSON.parse(cached);
       return parsed.map((item: Kajian) => {
+        const defaultKajianItem = INITIAL_KAJIAN.find(d => d.id === item.id);
+        const updated = { ...item };
+        if (defaultKajianItem && (item.id === 'kajian-1' || item.id === 'kajian-2' || item.id === 'kajian-3' || item.id === 'kajian-4' || item.id === 'kajian-5' || !updated.youtubeUrl)) {
+          updated.youtubeUrl = defaultKajianItem.youtubeUrl;
+        }
         if (item.id === 'kajian-1') {
-          return { ...item, image: fiqihSunnahFlyer };
+          return { ...updated, image: fiqihSunnahFlyer };
         }
         if (item.id === 'kajian-2') {
-          return { ...item, image: sirahNabawiyahFlyer };
+          return { ...updated, image: sirahNabawiyahFlyer };
         }
         if (item.id === 'kajian-3') {
-          return { ...item, image: ustadzIdrusAbidin };
+          return { ...updated, image: ustadzIdrusAbidin };
         }
-        return item;
+        return updated;
       });
     }
     return INITIAL_KAJIAN;
@@ -81,9 +155,33 @@ export default function App() {
     const cached = localStorage.getItem('maar3_galeri');
     if (cached) {
       const parsed = JSON.parse(cached);
-      return parsed.map((item: Galeri) => {
+      const merged = [...parsed];
+      INITIAL_GALERI.forEach(defaultItem => {
+        if (!merged.some(item => item.id === defaultItem.id)) {
+          merged.push(defaultItem);
+        }
+      });
+      return merged.map((item: Galeri) => {
+        if (item.id === 'gal-2') {
+          return { ...item, image: kbmaFlyer };
+        }
+        if (item.id === 'gal-3') {
+          return { ...item, image: sijumDistribusiFlyer };
+        }
+        if (item.id === 'gal-4') {
+          return { ...item, image: ogpFarmFlyer };
+        }
         if (item.id === 'gal-5') {
           return { ...item, image: bankSampahOrchidFlyer };
+        }
+        if (item.id === 'gal-6') {
+          return { ...item, image: posyanduFlyer };
+        }
+        if (item.id === 'gal-9') {
+          return { ...item, image: idulAdhaFlyer };
+        }
+        if (item.id === 'gal-10') {
+          return { ...item, image: kerjaBaktiFlyer };
         }
         return item;
       });
@@ -93,7 +191,16 @@ export default function App() {
 
   const [campaignList, setCampaignList] = useState<DonasiCampaign[]>(() => {
     const cached = localStorage.getItem('maar3_campaigns');
-    return cached ? JSON.parse(cached) : INITIAL_DONASI;
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      return parsed.map((item: DonasiCampaign) => {
+        if (item.id === 'don-3') {
+          return { ...item, image: sijumDistribusiFlyer };
+        }
+        return item;
+      });
+    }
+    return INITIAL_DONASI;
   });
 
   const [pengurusList, setPengurusList] = useState<Pengurus[]>(() => {
@@ -168,9 +275,19 @@ export default function App() {
     return cached;
   });
 
+  const [umkmList, setUmkmList] = useState<Umkm[]>(() => {
+    const cached = localStorage.getItem('maar3_umkm');
+    if (cached) return JSON.parse(cached);
+    return INITIAL_UMKM;
+  });
+
   useEffect(() => {
     localStorage.setItem('maar3_profile_video', profileVideoUrl);
   }, [profileVideoUrl]);
+
+  useEffect(() => {
+    localStorage.setItem('maar3_umkm', JSON.stringify(umkmList));
+  }, [umkmList]);
 
   useEffect(() => {
     localStorage.setItem('maar3_artikel', JSON.stringify(artikelList));
@@ -329,6 +446,9 @@ export default function App() {
               isAdmin={true}
             />
 
+            {/* UMKM local business board */}
+            <UmkmPanel umkmList={umkmList} />
+
             {/* Quick interactive schedules Widget on home */}
             <JadwalSholat />
           </>
@@ -348,6 +468,13 @@ export default function App() {
 
       case 'galeri':
         return <GaleriComponent galeriList={galeriList} />;
+
+      case 'umkm':
+        return (
+          <div className="pt-24 min-h-[85vh]">
+            <UmkmPanel umkmList={umkmList} />
+          </div>
+        );
 
       case 'artikel':
         return <ArtikelComponent artikelList={artikelList} onLike={handleLikeArtikel} />;
@@ -370,12 +497,14 @@ export default function App() {
             galeriList={galeriList}
             campaignList={campaignList}
             pengurusList={pengurusList}
+            umkmList={umkmList}
             setArtikelList={setArtikelList}
             setKegiatanList={setKegiatanList}
             setKajianList={setKajianList}
             setGaleriList={setGaleriList}
             setCampaignList={setCampaignList}
             setPengurusList={setPengurusList}
+            setUmkmList={setUmkmList}
             onClose={() => setCurrentTab('beranda')}
           />
         );
